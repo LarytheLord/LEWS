@@ -6,29 +6,30 @@ A comprehensive tool that detects when emerging animal-related technologies are 
 
 The Lock-in Early Warning System (LEWS) is designed to identify when animal-related technologies are approaching a "lock-in" point where they become difficult to change or reverse. The system uses historical patterns from technologies like factory farming to identify critical intervention windows for emerging technologies like insect farming, AI shrimp systems, and wildlife automation.
 
-### 9 Key Lock-in Dimensions
+### 9 Key Lock-in Dimensions (Updated Variable Names)
 
-The LEWS framework measures lock-in across 9 dimensions:
+The LEWS framework measures lock-in across 9 dimensions with simplified, intuitive variable names:
 
-1. **Regulatory Capture**: How deeply embedded in policy and regulation
-2. **Infrastructure Hardening**: Physical infrastructure purpose-built for the system
-3. **Supply Chain Standardization**: How standardized and optimized the supply chains are
-4. **Corporate Consolidation**: Degree of corporate control and concentration
-5. **Path Dependency**: How interconnected and self-reinforcing the system is
-6. **AI/Automation Embedding**: Integration of modern technology into the system
-7. **International Expansion**: Global spread and harmonization of the system
-8. **Slaughter/Processing Inertia**: Sunk costs in processing infrastructure
-9. **Breeding/Genetics Lock-in**: Dependence on specialized genetic lines
+1. **Uncertainty**: How much uncertainty exists around the technology
+2. **# Animals**: Scale of animals affected by the technology
+3. **Can They Feel?**: Evidence for animal sentience/welfare considerations
+4. **Suffering**: Intensity of potential suffering caused by the technology
+5. **Growth**: Rate of growth and adoption of the technology
+6. **Support**: Level of advocacy and support for the technology
+7. **Path Dependence**: How entrenched the system becomes over time
+8. **Regulatory Capture**: Degree of embedment in policy and regulation
+9. **Infrastructure Hardening**: Physical infrastructure purpose-built for the system
 
 ## Features
 
-- Interactive assessment tool with 9 lock-in dimension sliders
+- Interactive assessment tool with 9 lock-in dimension sliders (simple inputs → score)
 - Real-time lock-in score calculation (0-100)
-- Development stage classification (Research → Scaling → Lock-in)
-- Intervention window recommendations (Monitor/Act Soon/Act Now)
+- Visual risk assessment with clear intervention windows
+- Time until lock-in predictions based on trajectory analysis
 - Historical trajectory comparison to chicken industrial farming baseline
-- 11 comprehensive technology example presets
+- Multiple technology example presets (Battery Cages 🐔, AI Aquaculture 🦐, Insect Farms 🦗)
 - Animated background visualization
+- Detailed key metrics display (animals affected, suffering hours, intervention windows)
 
 ## Tech Stack
 
@@ -96,14 +97,55 @@ To create a production build:
 npm run build
 ```
 
+## UI Layout
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│ 🚨 LEWS – Lock-in Early Warning System                        │
+│ A quick risk check for emerging animal-farming technologies.  │
+├───────────────────────────────────────────────────────────────┤
+
+   Choose a system:
+      [ Battery Cages 🐔 ]   [ AI Aquaculture 🦐 ]   [ Insect Farms 🦗 ]
+
+┌───────────────────────────────┐   		┌───────────────────────────┐
+│          RISK INPUTS          │   │                           │
+│     (simple inputs → score)   │   │    ASSESSMENT RESULTS     │
+│                               │   │                           │
+│ ❓ Uncertainty                 │   │   					🔥 Lock-in Risk Score    │
+│ Low [════●══════════════════] High │ │         		72 / 100          │
+│   ±30 points                  │   │                           │
+│                               │   │   					⏰ Time Until Lock-in      │
+│ 🔢 # Animals                  │   │      		  ~5–8 years          │
+│ Low [══════●═══════════════] High│ │                           │
+│   440B/yr • ↑ 8%/yr          │   │   🚨 Intervention Window     	│
+│                               │   │         	ACT SOON            │
+│ 🧠 Can They Feel?             │   │                           │
+│  0% [══════●════════════════] 100%│ │   Range: 58 – 86            │
+│   60% • Medium evidence       │   │   ███████████████░░░░░░░░   │
+│                               │   │                           │
+│ 💔 Suffering                  │   │   Key Metrics               │
+│ Low [══════●═══════════════] High│ │  		 • 264B animals/year      │
+│   4,701 hours lifetime pain   │   │   • 1.24T hours suffering    │
+│                               │   │   • 0 orgs today            │
+│ 📈 Growth                     │   │   • Lock-in ~5–8 years       │
+│ Slow [══════●═══════════════] Fast│ │                           │
+│   $400M • multi-country       │   │ [ View Trajectory ]         │
+│                                │   │ [ Download ] [ Share ]      │
+│ 🧩 Support                 │   └───────────────────────────┘
+│ Strong [●════════════════════] Weak│
+│   Near-zero advocacy          │
+│                                │
+│ 🔗 Path Dependence            │
+│ Low [══════●═══════════════] High │
+│   System becoming entrenched  │
+└───────────────────────────────┘
+```
+
 ## API Endpoints
 
 - `POST /api/calculate` - Calculate lock-in score based on 9 inputs
 - `GET /api/trajectory?tech=:techName&species=:speciesName` - Get historical trajectory data
-
-## Deployment
-
-The application is ready for deployment on Vercel or similar platforms. The build system is configured for static export.
 
 ## Data Sources
 
@@ -134,3 +176,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Chart.js for data visualization
 - Next.js framework for the application
 - Based on research from the LEWS team
+- Updated UI based on LEWS Minimal UI (Updated) specifications
