@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+package-lock.json
+yarn.lock
 
 # Environment
 .env.local
@@ -8,7 +10,7 @@ node_modules/
 # Next.js
 .next/
 out/
-.next
+
 # IDE
 .vscode/
 .idea/
