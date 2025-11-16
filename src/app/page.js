@@ -27,20 +27,19 @@ ChartJS.register(
 
 export default function Home() {
   const [inputs, setInputs] = useState({
-    regulatoryCapture: 50,
-    infrastructureHardening: 50,
-    supplyChainStandardization: 50,
-    corporateConsolidation: 50,
-    pathDependency: 50,
-    aiAutomationEmbedding: 50,
-    internationalExpansion: 50,
-    slaughterInertia: 50,
-    breedingLockIn: 50
+    uncertainty: 30, // Medium uncertainty
+    animals: 50,
+    canTheyFeel: 60, // Medium sentience evidence
+    suffering: 45,
+    growth: 55, // Medium to high growth
+    support: 20, // Low support/strong advocacy gap
+    pathDependence: 40
   });
 
   const [result, setResult] = useState(null);
   const [trajectories, setTrajectories] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedSystem, setSelectedSystem] = useState('chickens'); // Default to chickens as baseline
 
   useEffect(() => {
     fetchTrajectoryData();
@@ -54,7 +53,7 @@ export default function Home() {
 
   const fetchTrajectoryData = async () => {
     try {
-      const response = await fetch('/api/trajectory?tech=factoryFarming');
+      const response = await fetch('/api/trajectory?tech=factoryFarming&species=chickens');
       const data = await response.json();
       setTrajectories({
         factoryFarming: data
@@ -98,7 +97,6 @@ export default function Home() {
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderWidth: 2,
         pointRadius: 3,
-        tension: 0.4
       },
       result && {
         label: 'Current Assessment',
@@ -165,176 +163,69 @@ export default function Home() {
     return 'red';
   };
 
-  // Lock-in dimensions with descriptions
+  // Lock-in dimensions with descriptions according to UI document
   const lockInDimensions = {
-    regulatoryCapture: { label: "Regulatory Capture", description: "How deeply the system is embedded in policy and regulation" },
-    infrastructureHardening: { label: "Infrastructure Hardening", description: "Physical infrastructure purpose-built for the system" },
-    supplyChainStandardization: { label: "Supply Chain Standardization", description: "How standardized and optimized the supply chains are" },
-    corporateConsolidation: { label: "Corporate Consolidation", description: "Degree of corporate control and concentration" },
-    pathDependency: { label: "Path Dependency", description: "How interconnected and self-reinforcing the system is" },
-    aiAutomationEmbedding: { label: "AI/Automation Embedding", description: "Integration of modern technology into the system" },
-    internationalExpansion: { label: "International Expansion", description: "Global spread and harmonization of the system" },
-    slaughterInertia: { label: "Slaughter/Processing Inertia", description: "Sunk costs in processing infrastructure" },
-    breedingLockIn: { label: "Breeding/Genetics Lock-in", description: "Dependence on specialized genetic lines" }
+    uncertainty: { 
+      label: "Uncertainty", 
+      icon: "❓",
+      description: "How much uncertainty exists around the technology",
+      formatValue: (val) => `±${val} points`
+    },
+    animals: { 
+      label: "# Animals", 
+      icon: "🔢", 
+      description: "Scale of animals affected by the technology",
+      formatValue: (val) => {
+        const billions = (val * 4.4).toFixed(1); // Assuming scale factor
+        return `${billions}B/yr • ↑ 8%/yr`;
+      }
+    },
+    canTheyFeel: { 
+      label: "Can They Feel?", 
+      icon: "🧠", 
+      description: "Evidence for animal sentience/welfare considerations",
+      formatValue: (val) => `${val}% • Medium evidence`
+    },
+    suffering: { 
+      label: "Suffering", 
+      icon: "💔", 
+      description: "Intensity of potential suffering caused by the technology",
+      formatValue: (val) => `${(val * 100).toFixed(0)} hours lifetime pain`
+    },
+    growth: { 
+      label: "Growth", 
+      icon: "📈", 
+      description: "Rate of growth and adoption of the technology",
+      formatValue: (val) => `$${(val * 8).toFixed(0)}M • multi-country`
+    },
+    support: { 
+      label: "Support", 
+      icon: "🧩", 
+      description: "Level of advocacy and support for the technology",
+      formatValue: (val) => `Near-zero advocacy` // For low support values
+    },
+    pathDependence: { 
+      label: "Path Dependence", 
+      icon: "🔗", 
+      description: "How entrenched the system becomes over time",
+      formatValue: (val) => `System becoming entrenched`
+    }
   };
 
-  // More comprehensive preset examples
-  const presetExamples = [
-    {
-      name: "Insect Farming 2024",
-      values: {
-        regulatoryCapture: 65,
-        infrastructureHardening: 70,
-        supplyChainStandardization: 60,
-        corporateConsolidation: 75,
-        pathDependency: 65,
-        aiAutomationEmbedding: 45,
-        internationalExpansion: 70,
-        slaughterInertia: 60,
-        breedingLockIn: 65
-      }
-    },
-    {
-      name: "AI Shrimp 2020",
-      values: {
-        regulatoryCapture: 15,
-        infrastructureHardening: 20,
-        supplyChainStandardization: 10,
-        corporateConsolidation: 25,
-        pathDependency: 15,
-        aiAutomationEmbedding: 30,
-        internationalExpansion: 15,
-        slaughterInertia: 10,
-        breedingLockIn: 12
-      }
-    },
-    {
-      name: "Wildlife AI 2018",
-      values: {
-        regulatoryCapture: 5,
-        infrastructureHardening: 8,
-        supplyChainStandardization: 3,
-        corporateConsolidation: 10,
-        pathDependency: 5,
-        aiAutomationEmbedding: 15,
-        internationalExpansion: 8,
-        slaughterInertia: 3,
-        breedingLockIn: 4
-      }
-    },
-    {
-      name: "Lab-Grown Meat 2024",
-      values: {
-        regulatoryCapture: 25,
-        infrastructureHardening: 15,
-        supplyChainStandardization: 10,
-        corporateConsolidation: 30,
-        pathDependency: 20,
-        aiAutomationEmbedding: 10,
-        internationalExpansion: 25,
-        slaughterInertia: 5,
-        breedingLockIn: 5
-      }
-    },
-    {
-      name: "Precision Fermentation 2025",
-      values: {
-        regulatoryCapture: 30,
-        infrastructureHardening: 25,
-        supplyChainStandardization: 20,
-        corporateConsolidation: 40,
-        pathDependency: 30,
-        aiAutomationEmbedding: 25,
-        internationalExpansion: 40,
-        slaughterInertia: 10,
-        breedingLockIn: 0
-      }
-    },
-    {
-      name: "Cultured Leather 2024",
-      values: {
-        regulatoryCapture: 20,
-        infrastructureHardening: 10,
-        supplyChainStandardization: 15,
-        corporateConsolidation: 35,
-        pathDependency: 25,
-        aiAutomationEmbedding: 20,
-        internationalExpansion: 20,
-        slaughterInertia: 10,
-        breedingLockIn: 0
-      }
-    },
-    {
-      name: "Automated Dairy 2023",
-      values: {
-        regulatoryCapture: 70,
-        infrastructureHardening: 65,
-        supplyChainStandardization: 75,
-        corporateConsolidation: 70,
-        pathDependency: 80,
-        aiAutomationEmbedding: 35,
-        internationalExpansion: 60,
-        slaughterInertia: 65,
-        breedingLockIn: 70
-      }
-    },
-    {
-      name: "Vertical Aquaculture 2024",
-      values: {
-        regulatoryCapture: 40,
-        infrastructureHardening: 45,
-        supplyChainStandardization: 35,
-        corporateConsolidation: 50,
-        pathDependency: 40,
-        aiAutomationEmbedding: 45,
-        internationalExpansion: 30,
-        slaughterInertia: 20,
-        breedingLockIn: 15
-      }
-    },
-    {
-      name: "Chicken Industry (Baseline)",
-      values: {
-        regulatoryCapture: 90,
-        infrastructureHardening: 95,
-        supplyChainStandardization: 90,
-        corporateConsolidation: 85,
-        pathDependency: 95,
-        aiAutomationEmbedding: 60,
-        internationalExpansion: 85,
-        slaughterInertia: 90,
-        breedingLockIn: 95
-      }
-    },
-    {
-      name: "Early Research Tech",
-      values: {
-        regulatoryCapture: 5,
-        infrastructureHardening: 5,
-        supplyChainStandardization: 5,
-        corporateConsolidation: 10,
-        pathDependency: 5,
-        aiAutomationEmbedding: 5,
-        internationalExpansion: 5,
-        slaughterInertia: 2,
-        breedingLockIn: 2
-      }
-    },
-    {
-      name: "Reset to Middle",
-      values: {
-        regulatoryCapture: 50,
-        infrastructureHardening: 50,
-        supplyChainStandardization: 50,
-        corporateConsolidation: 50,
-        pathDependency: 50,
-        aiAutomationEmbedding: 50,
-        internationalExpansion: 50,
-        slaughterInertia: 50,
-        breedingLockIn: 50
-      }
-    }
+  // System presets
+  const systemPresets = [
+    { id: 'chickens', name: 'Battery Cages 🐔', defaultValues: { animals: 90, growth: 85, support: 10, pathDependence: 95, uncertainty: 15, canTheyFeel: 95, suffering: 85 } },
+    { id: 'shrimp', name: 'AI Aquaculture 🦐', defaultValues: { animals: 25, growth: 60, support: 15, pathDependence: 30, uncertainty: 40, canTheyFeel: 50, suffering: 60 } },
+    { id: 'insects', name: 'Insect Farms 🦗', defaultValues: { animals: 70, growth: 70, support: 20, pathDependence: 40, uncertainty: 35, canTheyFeel: 45, suffering: 50 } }
   ];
+
+  const selectSystem = (systemId) => {
+    setSelectedSystem(systemId);
+    const preset = systemPresets.find(p => p.id === systemId);
+    if (preset) {
+      setInputs(preset.defaultValues);
+    }
+  };
 
   return (
     <div style={{ 
@@ -372,39 +263,72 @@ export default function Home() {
         margin: '0 auto', 
         padding: '0 1rem' 
       }}>
-        <header style={{ 
+        {/* Main Header */}
+        <div style={{ 
           textAlign: 'center', 
-          marginBottom: '3rem',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          marginBottom: '2rem',
+          padding: '1.5rem',
+          borderRadius: '0.5rem',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+          backdropFilter: 'blur(4px)',
+          border: '1px solid rgba(255, 255, 255, 0.3)'
         }}>
           <h1 style={{ 
-            fontSize: '2.5rem', 
+            fontSize: '1.8rem', 
             fontWeight: 'bold', 
-            color: 'white', 
-            marginBottom: '1rem' 
+            color: '#1e293b', 
+            marginBottom: '0.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem'
           }}>
-            LEWS - Lock-in Early Warning System
+            <span style={{fontSize: '1.5em'}}>🚨</span> LEWS – Lock-in Early Warning System
           </h1>
           <p style={{ 
-            fontSize: '1.125rem', 
-            color: 'white', 
-            maxWidth: '48rem', 
-            margin: '0 auto' 
+            fontSize: '1rem', 
+            color: '#64748b', 
+            margin: 0 
           }}>
-            A comprehensive tool that detects when emerging animal-related technologies are approaching lock-in 
-            using early-warning signals inspired by historical patterns across 9 key dimensions.
+            A quick risk check for emerging animal-farming technologies.
           </p>
-        </header>
+        </div>
 
+        {/* System Selection */}
         <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: '1fr 1fr', 
-          gap: '2rem', 
-          marginBottom: '2rem' 
+          display: 'flex', 
+          justifyContent: 'center', 
+          gap: '1rem', 
+          marginBottom: '2rem',
+          flexWrap: 'wrap'
         }}>
-          {/* Input Section - 9 Lock-in Dimensions */}
+          {systemPresets.map(preset => (
+            <button
+              key={preset.id}
+              onClick={() => selectSystem(preset.id)}
+              style={{ 
+                backgroundColor: selectedSystem === preset.id ? '#3b82f6' : '#e2e8f0',
+                color: selectedSystem === preset.id ? 'white' : '#334155',
+                padding: '0.5rem 1rem',
+                borderRadius: '0.5rem',
+                border: '1px solid #cbd5e1',
+                cursor: 'pointer',
+                fontWeight: '500',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.target.style.opacity = '0.9'}
+              onMouseLeave={(e) => e.target.style.opacity = '1'}
+            >
+              {preset.name}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
+          {/* Input Section - 7 Risk Inputs */}
           <div style={{ 
-            backgroundColor: 'rgba(255, 255, 255, 0.85)', 
+            backgroundColor: 'rgba(255, 255, 255, 0.9)', 
             padding: '1.5rem', 
             borderRadius: '0.5rem', 
             boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)', 
@@ -414,17 +338,16 @@ export default function Home() {
             overflowY: 'auto'
           }}>
             <h2 style={{ 
-              fontSize: '1.5rem', 
+              fontSize: '1.2rem', 
               fontWeight: '600', 
               marginBottom: '1.5rem', 
               color: '#1e293b',
-              position: 'sticky',
-              top: 0,
-              background: 'rgba(255, 255, 255, 0.85)',
-              padding: '0.5rem 0',
-              zIndex: 20
+              textAlign: 'center'
             }}>
-              Lock-in Assessment
+              RISK INPUTS
+              <div style={{ fontSize: '0.8rem', fontWeight: '400', color: '#64748b', marginTop: '0.25rem' }}>
+                (simple inputs → score)
+              </div>
             </h2>
             
             <div style={{ paddingBottom: '1rem' }}>
@@ -436,29 +359,32 @@ export default function Home() {
                     marginBottom: '0.5rem',
                     alignItems: 'center'
                   }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ 
-                        fontWeight: '600', 
-                        color: '#374151', 
-                        display: 'block',
-                        fontSize: '0.9rem'
-                      }}>
-                        {lockInDimensions[key]?.label || key.replace(/([A-Z])/g, ' $1').trim()}
-                      </label>
-                      <small style={{ 
-                        color: '#64748b', 
-                        fontSize: '0.75rem',
-                        display: 'block',
-                        lineHeight: 1.3
-                      }}>
-                        {lockInDimensions[key]?.description}
-                      </small>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '1.2rem' }}>{lockInDimensions[key]?.icon}</span>
+                      <div>
+                        <label style={{ 
+                          fontWeight: '600', 
+                          color: '#374151', 
+                          display: 'block',
+                          fontSize: '0.9rem'
+                        }}>
+                          {lockInDimensions[key]?.label}
+                        </label>
+                        <small style={{ 
+                          color: '#64748b', 
+                          fontSize: '0.75rem',
+                          display: 'block',
+                          lineHeight: 1.3
+                        }}>
+                          {lockInDimensions[key]?.description}
+                        </small>
+                      </div>
                     </div>
                     <span style={{ 
                       color: '#6b7280', 
                       fontWeight: '600', 
-                      fontSize: '1rem', 
-                      minWidth: '40px', 
+                      fontSize: '0.9rem', 
+                      minWidth: '60px', 
                       textAlign: 'right',
                       marginLeft: '1rem'
                     }}>
@@ -491,6 +417,26 @@ export default function Home() {
                     <span>Low</span>
                     <span>High</span>
                   </div>
+                  {key === 'uncertainty' && (
+                    <div style={{ 
+                      fontSize: '0.75rem', 
+                      color: '#9ca3af', 
+                      marginTop: '0.2rem',
+                      textAlign: 'right'
+                    }}>
+                      {lockInDimensions[key]?.formatValue(value)}
+                    </div>
+                  )}
+                  {(key === 'animals' || key === 'growth') && (
+                    <div style={{ 
+                      fontSize: '0.75rem', 
+                      color: '#9ca3af', 
+                      marginTop: '0.2rem',
+                      textAlign: 'right'
+                    }}>
+                      {lockInDimensions[key]?.formatValue(value)}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -534,9 +480,9 @@ export default function Home() {
 
           {/* Results Section */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {/* Score Display */}
+            {/* Assessment Results */}
             <div style={{ 
-              backgroundColor: 'rgba(255, 255, 255, 0.85)', 
+              backgroundColor: 'rgba(255, 255, 255, 0.9)', 
               padding: '1.5rem', 
               borderRadius: '0.5rem', 
               boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)', 
@@ -544,98 +490,166 @@ export default function Home() {
               border: '1px solid rgba(255, 255, 255, 0.3)' 
             }}>
               <h2 style={{ 
-                fontSize: '1.5rem', 
+                fontSize: '1.2rem', 
                 fontWeight: '600', 
-                marginBottom: '1rem', 
-                color: '#1e293b' 
+                marginBottom: '1.5rem', 
+                color: '#1e293b',
+                textAlign: 'center'
               }}>
-                Assessment Results
+                ASSESSMENT RESULTS
               </h2>
               
               {result && !loading ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div style={{ textAlign: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                  {/* Lock-in Risk Score */}
+                  <div style={{ textAlign: 'center', padding: '1rem 0' }}>
                     <div style={{ 
-                      fontSize: '3rem', 
+                      fontSize: '2.5rem', 
                       fontWeight: 'bold', 
-                      color: '#1e293b',
+                      color: '#dc2626',
                       textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                     }}>
                       {result.score}/100
                     </div>
                     <div style={{ 
-                      marginTop: '0.5rem', 
-                      fontSize: '0.875rem', 
-                      color: '#64748b' 
+                      fontSize: '0.9rem', 
+                      color: '#64748b',
+                      marginTop: '0.25rem'
                     }}>
-                      Overall Lock-in Score
+                      Lock-in Risk Score
                     </div>
                   </div>
-                  
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                      <h3 style={{ fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>Development Stage</h3>
-                      <div 
-                        style={{ 
-                          fontSize: '1.125rem', 
-                          fontWeight: '600', 
-                          padding: '0.75rem', 
-                          borderRadius: '0.5rem', 
-                          textAlign: 'center',
-                          backgroundColor: getStageColor(result.stage) === 'green' ? 'rgba(16, 185, 129, 0.2)' : 
-                                          getStageColor(result.stage) === 'yellow' ? 'rgba(234, 179, 8, 0.2)' : 
-                                          getStageColor(result.stage) === 'orange' ? 'rgba(249, 115, 22, 0.2)' : 
-                                          'rgba(239, 68, 68, 0.2)',
-                          color: getStageColor(result.stage) === 'green' ? '#065f46' : 
-                                 getStageColor(result.stage) === 'yellow' ? '#713f12' : 
-                                 getStageColor(result.stage) === 'orange' ? '#7c2d12' : 
-                                 '#7f1d1d',
-                          border: getStageColor(result.stage) === 'green' ? '1px solid rgba(16, 185, 129, 0.3)' : 
-                                   getStageColor(result.stage) === 'yellow' ? '1px solid rgba(234, 179, 8, 0.3)' : 
-                                   getStageColor(result.stage) === 'orange' ? '1px solid rgba(249, 115, 22, 0.3)' : 
-                                   '1px solid rgba(239, 68, 68, 0.3)'
-                        }}
-                      >
-                        {result.stage}
-                      </div>
+
+                  {/* Time Until Lock-in */}
+                  <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+                    <div style={{ 
+                      fontSize: '1.2rem', 
+                      fontWeight: 'bold', 
+                      color: '#0f172a',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}>
+                      <span>⏰</span>
+                      {result.timeUntilLockin}
                     </div>
-                    
-                    <div>
-                      <h3 style={{ fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>Intervention Window</h3>
-                      <div 
-                        style={{ 
-                          fontSize: '1.125rem', 
-                          fontWeight: '600', 
-                          padding: '0.75rem', 
-                          borderRadius: '0.5rem', 
-                          textAlign: 'center',
-                          backgroundColor: getInterventionColor(result.interventionWindow) === 'green' ? 'rgba(16, 185, 129, 0.2)' : 
-                                          getInterventionColor(result.interventionWindow) === 'yellow' ? 'rgba(234, 179, 8, 0.2)' : 
-                                          'rgba(239, 68, 68, 0.2)',
-                          color: getInterventionColor(result.interventionWindow) === 'green' ? '#065f46' : 
-                                 getInterventionColor(result.interventionWindow) === 'yellow' ? '#713f12' : 
-                                 '#7f1d1d',
-                          border: getInterventionColor(result.interventionWindow) === 'green' ? '1px solid rgba(16, 185, 129, 0.3)' : 
-                                   getInterventionColor(result.interventionWindow) === 'yellow' ? '1px solid rgba(234, 179, 8, 0.3)' : 
-                                   '1px solid rgba(239, 68, 68, 0.3)'
-                        }}
-                      >
-                        {result.interventionWindow}
-                      </div>
+                    <div style={{ 
+                      fontSize: '0.8rem', 
+                      color: '#64748b',
+                      marginTop: '0.25rem'
+                    }}>
+                      Time Until Lock-in
                     </div>
                   </div>
-                  
-                  {result.historicalMatch.year && (
-                    <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
-                      <h3 style={{ fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>Historical Comparison</h3>
-                      <p style={{ color: '#1e293b', fontWeight: '500' }}>
-                        Current score {result.score} ≈ Chicken industrial farming in <span style={{ fontWeight: '700', color: '#7c3aed' }}>{result.historicalMatch.year}</span>
-                      </p>
-                      <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '0.25rem' }}>
-                        This suggests the technology is at a similar development stage as chicken farming was in {result.historicalMatch.year}.
-                      </p>
+
+                  {/* Intervention Window */}
+                  <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+                    <div 
+                      style={{ 
+                        fontSize: '1.3rem', 
+                        fontWeight: 'bold', 
+                        padding: '0.5rem',
+                        borderRadius: '0.5rem',
+                        backgroundColor: getInterventionColor(result.interventionWindow) === 'green' ? 'rgba(16, 185, 129, 0.2)' : 
+                                        getInterventionColor(result.interventionWindow) === 'yellow' ? 'rgba(234, 179, 8, 0.2)' : 
+                                        'rgba(239, 68, 68, 0.2)',
+                        color: getInterventionColor(result.interventionWindow) === 'green' ? '#065f46' : 
+                               getInterventionColor(result.interventionWindow) === 'yellow' ? '#713f12' : 
+                               '#7f1d1d',
+                        border: getInterventionColor(result.interventionWindow) === 'green' ? '1px solid rgba(16, 185, 129, 0.3)' : 
+                                 getInterventionColor(result.interventionWindow) === 'yellow' ? '1px solid rgba(234, 179, 8, 0.3)' : 
+                                 '1px solid rgba(239, 68, 68, 0.3)',
+                        display: 'inline-block'
+                      }}
+                    >
+                      {result.interventionWindow}
                     </div>
-                  )}
+                    <div style={{ 
+                      fontSize: '0.8rem', 
+                      color: '#64748b',
+                      marginTop: '0.25rem'
+                    }}>
+                      Intervention Window
+                    </div>
+                  </div>
+
+                  {/* Range */}
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ 
+                      fontSize: '1rem', 
+                      fontWeight: '500', 
+                      color: '#374151',
+                      marginBottom: '0.5rem'
+                    }}>
+                      Range: {result.range[0]} – {result.range[1]}
+                    </div>
+                    <div style={{ 
+                      height: '10px', 
+                      backgroundColor: '#e2e8f0', 
+                      borderRadius: '5px',
+                      overflow: 'hidden'
+                    }}>
+                      <div 
+                        style={{ 
+                          height: '100%', 
+                          width: `${(result.score - result.range[0]) / (result.range[1] - result.range[0]) * 100}%`,
+                          backgroundColor: '#3b82f6',
+                          borderRadius: '5px'
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Key Metrics */}
+                  <div>
+                    <h3 style={{ fontWeight: '500', color: '#374151', marginBottom: '0.5rem', textAlign: 'center' }}>Key Metrics</h3>
+                    <div style={{ fontSize: '0.85rem', color: '#475569' }}>
+                      <div>• {result.keyMetrics.animalsAffected}</div>
+                      <div>• {result.keyMetrics.sufferingHours} suffering</div>
+                      <div>• {result.keyMetrics.advocacyOrgs} orgs today</div>
+                      <div>• Lock-in ~{result.keyMetrics.expectedLockIn}</div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginTop: '1rem' }}>
+                    <button style={{
+                      backgroundColor: '#e2e8f0',
+                      color: '#334155',
+                      padding: '0.5rem',
+                      borderRadius: '0.5rem',
+                      border: '1px solid #cbd5e1',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      transition: 'background-color 0.2s'
+                    }}>
+                      View Trajectory
+                    </button>
+                    <button style={{
+                      backgroundColor: '#e2e8f0',
+                      color: '#334155',
+                      padding: '0.5rem',
+                      borderRadius: '0.5rem',
+                      border: '1px solid #cbd5e1',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      transition: 'background-color 0.2s'
+                    }}>
+                      Download
+                    </button>
+                    <button style={{
+                      backgroundColor: '#e2e8f0',
+                      color: '#334155',
+                      padding: '0.5rem',
+                      borderRadius: '0.5rem',
+                      border: '1px solid #cbd5e1',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      transition: 'background-color 0.2s'
+                    }}>
+                      Share
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <p style={{ 
@@ -643,7 +657,7 @@ export default function Home() {
                   textAlign: 'center', 
                   padding: '1rem', 
                   fontStyle: 'italic',
-                  minHeight: '200px',
+                  minHeight: '300px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
@@ -652,64 +666,6 @@ export default function Home() {
                 </p>
               )}
             </div>
-
-            {/* Example Presets - Scrollable grid */}
-            <div style={{ 
-              backgroundColor: 'rgba(255, 255, 255, 0.85)', 
-              padding: '1.5rem', 
-              borderRadius: '0.5rem', 
-              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)', 
-              backdropFilter: 'blur(4px)', 
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              maxHeight: '200px',
-              overflowY: 'auto'
-            }}>
-              <h2 style={{ 
-                fontSize: '1.25rem', 
-                fontWeight: '600', 
-                marginBottom: '1rem', 
-                color: '#1e293b' 
-              }}>
-                Assessment Presets
-              </h2>
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', 
-                gap: '0.5rem' 
-              }}>
-                {presetExamples.map((preset, index) => (
-                  <button 
-                    key={index}
-                    onClick={() => setInputs(preset.values)}
-                    style={{ 
-                      backgroundColor: '#e2e8f0', 
-                      color: '#334155', 
-                      padding: '0.5rem', 
-                      borderRadius: '0.5rem', 
-                      border: '1px solid #cbd5e1', 
-                      cursor: 'pointer', 
-                      fontWeight: '500', 
-                      transition: 'all 0.2s',
-                      fontSize: '0.8rem',
-                      textAlign: 'center',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#cbd5e1';
-                      e.target.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = '#e2e8f0';
-                      e.target.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    {preset.name}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
@@ -717,7 +673,7 @@ export default function Home() {
         {trajectories && (
           <div style={{ 
             marginTop: '2rem', 
-            backgroundColor: 'rgba(255, 255, 255, 0.85)', 
+            backgroundColor: 'rgba(255, 255, 255, 0.9)', 
             padding: '1.5rem', 
             borderRadius: '0.5rem', 
             boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)', 
@@ -725,24 +681,21 @@ export default function Home() {
             border: '1px solid rgba(255, 255, 255, 0.3)' 
           }}>
             <h2 style={{ 
-              fontSize: '1.5rem', 
+              fontSize: '1.2rem', 
               fontWeight: '600', 
               marginBottom: '1rem', 
-              color: '#1e293b' 
+              color: '#1e293b',
+              textAlign: 'center'
             }}>
               Historical Trajectory Comparison
             </h2>
             <div style={{ height: '20rem' }}>
               <Line data={chartData} options={chartOptions} />
             </div>
-            <p style={{ 
-              fontSize: '0.875rem', 
-              color: '#64748b', 
-              marginTop: '1rem' 
-            }}>
+            <div style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '1rem', textAlign: 'center' }}>
               This chart shows where the current technology stands compared to the historical trajectory of chicken industrial farming. 
               The red dot represents the current assessment score mapped to the historical timeline.
-            </p>
+            </div>
           </div>
         )}
       </div>
