@@ -40,6 +40,7 @@ export default function Home() {
   const [trajectories, setTrajectories] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedSystem, setSelectedSystem] = useState('chickens'); // Default to chickens as baseline
+  const [showTrajectoryModal, setShowTrajectoryModal] = useState(false);
 
   useEffect(() => {
     fetchTrajectoryData();
@@ -224,6 +225,55 @@ export default function Home() {
     const preset = systemPresets.find(p => p.id === systemId);
     if (preset) {
       setInputs(preset.defaultValues);
+    }
+  };
+
+  // Helper functions for buttons
+  const handleViewTrajectory = () => {
+    setShowTrajectoryModal(true);
+  };
+
+  const handleDownload = () => {
+    // Simulate download functionality
+    alert('Downloading results as PDF/CSV...');
+    // In a real implementation, this would trigger an actual download
+    // Example: create and download a file with the current results
+    if (result) {
+      const dataStr = JSON.stringify(result, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `lews-assessment-${selectedSystem}-${new Date().toISOString().slice(0, 10)}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+  };
+
+  const handleShare = () => {
+    // Simulate share functionality
+    if (navigator.share) {
+      navigator.share({
+        title: 'LEWS - Lock-in Early Warning System',
+        text: `Check out this animal technology assessment: Lock-in Risk Score: ${result?.score}/100, Intervention Window: ${result?.interventionWindow}`,
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      // Fallback for browsers that don't support the Web Share API
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        // Fallback to traditional copy
+        const textArea = document.createElement("textarea");
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Link copied to clipboard!');
+      });
     }
   };
 
@@ -613,40 +663,55 @@ export default function Home() {
 
                   {/* Action Buttons */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginTop: '1rem' }}>
-                    <button style={{
-                      backgroundColor: '#e2e8f0',
-                      color: '#334155',
-                      padding: '0.5rem',
-                      borderRadius: '0.5rem',
-                      border: '1px solid #cbd5e1',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem',
-                      transition: 'background-color 0.2s'
-                    }}>
+                    <button 
+                      onClick={handleViewTrajectory}
+                      style={{
+                        backgroundColor: '#e2e8f0',
+                        color: '#334155',
+                        padding: '0.5rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #cbd5e1',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#cbd5e1'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#e2e8f0'}
+                    >
                       View Trajectory
                     </button>
-                    <button style={{
-                      backgroundColor: '#e2e8f0',
-                      color: '#334155',
-                      padding: '0.5rem',
-                      borderRadius: '0.5rem',
-                      border: '1px solid #cbd5e1',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem',
-                      transition: 'background-color 0.2s'
-                    }}>
+                    <button 
+                      onClick={handleDownload}
+                      style={{
+                        backgroundColor: '#e2e8f0',
+                        color: '#334155',
+                        padding: '0.5rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #cbd5e1',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#cbd5e1'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#e2e8f0'}
+                    >
                       Download
                     </button>
-                    <button style={{
-                      backgroundColor: '#e2e8f0',
-                      color: '#334155',
-                      padding: '0.5rem',
-                      borderRadius: '0.5rem',
-                      border: '1px solid #cbd5e1',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem',
-                      transition: 'background-color 0.2s'
-                    }}>
+                    <button 
+                      onClick={handleShare}
+                      style={{
+                        backgroundColor: '#e2e8f0',
+                        color: '#334155',
+                        padding: '0.5rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid #cbd5e1',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#cbd5e1'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#e2e8f0'}
+                    >
                       Share
                     </button>
                   </div>
@@ -699,6 +764,69 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* Trajectory Modal */}
+      {showTrajectoryModal && (
+        <div style={{ 
+          position: 'fixed', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          backgroundColor: 'rgba(0, 0, 0, 0.7)', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          zIndex: 1000 
+        }}>
+          <div style={{ 
+            backgroundColor: 'white', 
+            padding: '2rem', 
+            borderRadius: '0.5rem', 
+            maxWidth: '600px', 
+            width: '90%', 
+            position: 'relative',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+          }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem', color: '#1e293b' }}>
+              Historical Trajectory Analysis
+            </h2>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>Analysis</h3>
+              <p style={{ color: '#64748b', lineHeight: '1.6' }}>
+                {result && result.historicalMatch?.year 
+                  ? `• Current technology ≈ chicken farming in ${result.historicalMatch.year}.` 
+                  : '• Current technology compared to historical chicken farming trajectory.'}
+                <br />• Expected lock-in at current momentum: {result?.timeUntilLockin || 'Unknown'}.
+              </p>
+            </div>
+            <div style={{ height: '300px', marginBottom: '1.5rem' }}>
+              <Line data={chartData} options={{ 
+                ...chartOptions, 
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { ...chartOptions.plugins, title: { display: false } }
+              }} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+              <button 
+                onClick={() => setShowTrajectoryModal(false)}
+                style={{
+                  backgroundColor: '#e2e8f0',
+                  color: '#334155',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.5rem',
+                  border: '1px solid #cbd5e1',
+                  cursor: 'pointer',
+                  fontWeight: '500'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add CSS animation for loading spinner */}
       <style jsx>{`
