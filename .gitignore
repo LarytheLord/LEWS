@@ -10,6 +10,7 @@ yarn.lock
 # Next.js
 .next/
 out/
+build/
 
 # IDE
 .vscode/
@@ -24,3 +25,24 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Large binaries
+*.node
+*.dylib
+*.so
+*.dll
+*.bin
+*.tar.gz
+*.zip
+
+# Cache
+.cache/
+.pnpm-store/
+.nyc_output/
+coverage/
+
+# Temp files
+tmp/
+temp/
+*.tmp
+*.temp
